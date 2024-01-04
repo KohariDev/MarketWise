@@ -20,7 +20,7 @@ const Navbar = () => {
           />
 
           <p className="nav-logo">
-            Price<span className='text-blue-600'>Wise</span>
+            Market<span className='text-blue-600'>Wise</span>
           </p>
         </Link>
 
