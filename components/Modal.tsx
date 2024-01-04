@@ -14,23 +14,16 @@ const Modal = ({ productId }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setIsSubmitting(true);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-      try {
-        await addUserEmailToProduct(productId, email);
-        setEmail("");
-        closeModal();
-      } catch (error) {
-        console.error("Error submitting email:", error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [productId, email]
-  );
+    await addUserEmailToProduct(productId, email);
+
+    setIsSubmitting(false);
+    setEmail("");
+    closeModal();
+  };
 
   const openModal = () => setIsOpen(true);
 
