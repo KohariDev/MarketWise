@@ -1,24 +1,29 @@
-"use client";
+"use client"
 
-import { scrapeAndStoreProduct } from "@/lib/actions";
-import { FormEvent, useState } from "react";
+import { scrapeAndStoreProduct } from '@/lib/actions';
+import { FormEvent, useState } from 'react'
 
 const isValidAmazonProductURL = (url: string) => {
   try {
     const parsedURL = new URL(url);
     const hostname = parsedURL.hostname;
 
-    // Check if the hostname matches the pattern of an Amazon URL
-    const amazonRegex = /amazon\.[a-z.]{2,}$/;
-    return amazonRegex.test(hostname);
+    if(
+      hostname.includes('amazon.com') || 
+      hostname.includes ('amazon.') || 
+      hostname.endsWith('amazon')
+    ) {
+      return true;
+    }
   } catch (error) {
-    console.error("URL validation error:", error);
-    return false; // Immediately return false if URL parsing fails
+    return false;
   }
-};
+
+  return false;
+}
 
 const Searchbar = () => {
-  const [searchPrompt, setSearchPrompt] = useState("");
+  const [searchPrompt, setSearchPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -26,40 +31,42 @@ const Searchbar = () => {
 
     const isValidLink = isValidAmazonProductURL(searchPrompt);
 
-    if (!isValidLink) return alert("Please provide a valid Amazon link");
+    if(!isValidLink) return alert('Please provide a valid Amazon link')
 
     try {
       setIsLoading(true);
 
       // Scrape the product page
-        const product = await scrapeAndStoreProduct(searchPrompt);
+      const product = await scrapeAndStoreProduct(searchPrompt);
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
-    <form className="flex flex-wrap gap-4 mt-12" onSubmit={handleSubmit}>
-      <input
+    <form 
+      className="flex flex-wrap gap-4 mt-12" 
+      onSubmit={handleSubmit}
+    >
+      <input 
         type="text"
         value={searchPrompt}
         onChange={(e) => setSearchPrompt(e.target.value)}
         placeholder="Enter product link"
         className="searchbar-input"
-        aria-label="Amazon product link"
       />
 
-      <button
-        type="submit"
+      <button 
+        type="submit" 
         className="searchbar-btn"
-        disabled={searchPrompt === ""}
+        disabled={searchPrompt === ''}
       >
-        {isLoading ? "Searching..." : "Search"}
+        {isLoading ? 'Searching...' : 'Search'}
       </button>
     </form>
-  );
-};
+  )
+}
 
-export default Searchbar;
+export default Searchbar
